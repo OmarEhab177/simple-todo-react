@@ -1,25 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './App.css'
 
-function App() {
+function TodoList() {
+  const [todos, setTodos] = useState([]);
+  const [newTodo, setNewTodo] = useState('');
+  const [error, setError] = useState('');
+
+  const handleInputChange = (e) => {
+    setNewTodo(e.target.value);
+  };
+
+  const handleAddTodo = () => {
+    if (newTodo.trim() !== '') {
+      setTodos([...todos, newTodo]);
+      setNewTodo('');
+      setError('');
+    } else {
+      setError('Please enter a valid to-do item');
+    }
+  };
+
+  const handleDeleteTodo = (index) => {
+    const updatedTodos = todos.filter((_, i) => i !== index);
+    setTodos(updatedTodos);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <h1 className="title">Todo List</h1>
+      <div className="input-container">
+        <input
+          type="text"
+          value={newTodo}
+          onChange={handleInputChange}
+          placeholder="Add a new task"
+          className="input"
+        />
+        <button onClick={handleAddTodo} className="add-button">Add</button>
+      </div>
+      {error && <p className="error">{error}</p>}
+      <ul className="todo-list">
+        {todos.map((todo, index) => (
+          <li key={index} className="todo-item">
+            {todo}
+            <button onClick={() => handleDeleteTodo(index)} className="delete-button">Delete</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
 
-export default App;
+export default TodoList;
